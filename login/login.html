@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP - Logowanie</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="overall">
+        <div class="Logowanie">
+            <form method="POST" action="../php/zaloguj_sie.php">
+                <span>LOGIN:</span> <input type="text" name="logowanie_login" required>
+                <span>HASŁO:</span> <input type="password" name="logowanie_haslo" required>
+
+                <button type="submit" class="log_btn">Zaloguj Się</button>
+            </form>
+        </div>
+
+
+        <div class="rejestracja">
+            <form method="POST" action="../php/zarejestruj_sie.php">
+                <span>LOGIN:</span> <input type="text" name="rejestracja_login" required>
+                <span>HASŁO:</span> <input type="password" name="rejestracja_haslo" required>
+
+                <button type="submit" class="rej_btn">Zarejestruj Się</button>
+            </form>
+        </div>
+        <h1 class="h-logowanie">Zaloguj się</h1>
+        <h1 class="h-rejestracja">Zarejestruj się</h1>
+        <div class="log-rej">
+            <p>Nie masz jeszcze konta?</p> <span class="zarejestruj_sie_hint">Zarejestruj się</span>
+        </div>
+            
+    </div>
+
+
+
+    <script src="login.js"></script>
+</body>
+</html>
