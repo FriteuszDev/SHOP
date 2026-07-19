@@ -40,8 +40,9 @@ try {
             <?php endforeach; ?>
         </div>
 
-
-        <div class="koszyk"><i class="fa-solid fa-basket-shopping"></i></div>
+        <a href="../koszyk/koszyk.php">
+            <div class="koszyk"><i class="fa-solid fa-basket-shopping"></i></div>
+        </a>
 
         <script src="main.js"></script>
     </body>

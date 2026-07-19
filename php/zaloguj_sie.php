@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
+
         if ($user_data && password_verify($haslo, $user_data['haslo'])) {
             $uzyte_id = $user_data['id'];
             $stmt2 = $pdo->prepare("SELECT koszyk_id FROM koszyk WHERE uzytkownik_id = :uzyte_id");
