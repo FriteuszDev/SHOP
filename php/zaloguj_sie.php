@@ -13,22 +13,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // 1. Szukamy w bazie TYLKO JEDNEGO użytkownika o podanym loginie
+
         $stmt = $pdo->prepare("SELECT id, nazwa, haslo FROM uzytkownicy WHERE nazwa = :login");
         $stmt->execute(['login' => $login]);
         
-        // 2. Pobieramy ten jeden wiersz (bez żadnej pętli while!)
+
         $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // 3. Sprawdzamy czy użytkownik istnieje ORAZ czy hasło pasuje
+
         if ($user_data && password_verify($haslo, $user_data['haslo'])) {
+            $uzyte_id = $user_data['id'];
+            $stmt2 = $pdo->prepare("SELECT koszyk_id FROM koszyk WHERE uzytkownik_id = :uzyte_id");
+            $stmt2->execute(['uzyte_id' => $uzyte_id]);
+            $koszyk = $stmt2->fetch();
+            if($koszyk){
+                $koszyk_id = $koszyk['koszyk_id'];
+                $_SESSION['id_koszyk'] = $koszyk_id;
+            } else {
+                $stmt3 = $pdo->prepare("INSERT INTO koszyk (uzytkownik_id) VALUES (:id)");
+                $stmt3->execute([
+                    'id' => $uzyte_id
+                ]);
+            }
+
+
+
             $_SESSION['zalogowany'] = true;
             $_SESSION['user_login'] = $user_data['login'];
             
             header("Location: ../main/main.php");
             exit();
         } else {
-            // Bezpieczniej jest podać ogólny komunikat, żeby haker nie wiedział, czy pomylił login czy hasło
             echo "Niepoprawny login lub hasło.";
             header("Location: ../login/login.html");
             exit();
