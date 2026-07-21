@@ -39,6 +39,29 @@ foreach ($wszystkie_produkty as $koszyk_data) {
 }
 
 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $produkt_do_usuniecia = $_POST['produkt_do_usuniecia'] ?? '';
+
+    if (!empty($produkt_do_usuniecia)){
+        $sql = "SELECT id FROM produkty WHERE nazwa = :nazwa_produktu";
+        $stmt4 = $pdo->prepare($sql);
+        $stmt4->execute(['nazwa_produktu' => $produkt_do_usuniecia]);
+        $id_produktu_wiersz = $stmt4->fetch(PDO::FETCH_ASSOC);
+
+        if ($id_produktu_wiersz){
+            $id_produktu = $id_produktu_wiersz['id'];
+            $sql = "DELETE FROM koszyk_produkty WHERE produkt_id = :id_produktu AND koszyk_id = :koszyk_id";
+            $stmt3 = $pdo->prepare($sql);
+            $stmt3->execute([
+                'id_produktu' => $id_produktu,
+                'koszyk_id' => $koszyk_id
+            ]);
+        }
+
+    }
+}
+
 } catch(PDOException $e) {
     echo "Błąd połączenia: " . $e->getMessage();
 }

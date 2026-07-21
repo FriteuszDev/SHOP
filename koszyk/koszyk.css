@@ -29,6 +29,9 @@ body {
   font-weight: bold;
   position: relative;
 }
+.product-container > div:hover {
+    cursor: pointer;
+}
 .cena_ilosc_kontener {
     position: absolute;
     bottom: 15%;
