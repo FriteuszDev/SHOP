@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP - Sprzedawaj</title>
+    <link rel="stylesheet" href="sprzedaz.css">
+</head>
+<body>
+        <form method="POST" action="../php/dodaj_produkt.php" class="tworzenie">
+            NAZWA: <input type="text" name="nazwa" id="nazwa" required>
+            OPIS: <textarea name="opis" id="opis" required></textarea>
+            CENA: <input type="number" name="cena" min="0" max="99.99" step="0.01" placeholder="00.00" required>
+
+
+            <button type="submit">DODAJ PRODUKT</button>
+        </form>
+
+</body>
+</html>

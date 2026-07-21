@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
 
-
+            $_SESSION['id_uzytkownika'] = $uzyte_id;
             $_SESSION['zalogowany'] = true;
             $_SESSION['user_login'] = $user_data['login'];
             
