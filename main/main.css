@@ -30,6 +30,9 @@ body {
   position: relative;
 }
 
+.product-container > div:hover {
+  cursor: pointer;
+}
 
 .cena_produkt {
     position: absolute;

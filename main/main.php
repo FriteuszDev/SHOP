@@ -21,6 +21,40 @@ if (isset($_SESSION['zalogowany']) && $_SESSION['zalogowany'] === true) {
             $wybrane_sortowanie = $_POST['sortowanie'] ?? '';
             
 
+            $produkt_do_koszyka = $_POST['produkt_do_koszyka'] ?? '';
+
+            if (!empty($produkt_do_koszyka)){
+                $sql = "SELECT id FROM produkty WHERE nazwa = :nazwa";
+                $stmt4 = $pdo->prepare($sql);
+                $stmt4->execute(['nazwa' => $produkt_do_koszyka]);
+                $produkt_koszyk = $stmt4->fetch(PDO::FETCH_ASSOC);
+                
+                    if ($produkt_koszyk){
+                    $id_produktu = $produkt_koszyk['id'];
+
+                    $sql = "SELECT pozycja_id, ilosc FROM koszyk_produkty WHERE produkt_id = :produkt_id";
+                    $stmt6 = $pdo->prepare($sql);
+                    $stmt6->execute(['produkt_id' => $id_produktu]);
+                    $pozycja_koszyka_z_produktem = $stmt6->fetch(PDO::FETCH_ASSOC);
+                    if ($pozycja_koszyka_z_produktem){
+                        $sql = "UPDATE koszyk_produkty SET ilosc = ilosc + 1 WHERE produkt_id = :id_produktu";
+                        $stmt7 = $pdo->prepare($sql);
+                        $stmt7->execute([
+                            'id_produktu' => $id_produktu,
+                        ]);
+                    } else {
+                        $sql = "INSERT INTO koszyk_produkty (koszyk_id, produkt_id) VALUES (:koszyk_id, :produkt_id)";
+                            $stmt5 = $pdo->prepare($sql);
+                            $stmt5->execute([
+                                'koszyk_id' => $koszyk_id,
+                                'produkt_id' => $id_produktu
+                            ]);
+                    }
+
+                    }
+            }
+
+
             if (!empty($wybrana_kategoria)) {
 
                 if (empty($wybrane_sortowanie)) {
@@ -105,7 +139,7 @@ if (isset($_SESSION['zalogowany']) && $_SESSION['zalogowany'] === true) {
 
     <?php else: ?>
         
-        <?php foreach ($stmt as $row): ?>
+        <?php foreach ($stmt as $row): ?>w
             <div class="<?php echo htmlspecialchars($row['nazwa']) ?>">
                 <?php echo htmlspecialchars($row['nazwa']) ?>
                 <div class="cena_produkt"><?php echo htmlspecialchars($row['cena']). " zł" ?></div>
