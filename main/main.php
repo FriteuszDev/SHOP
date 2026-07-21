@@ -19,23 +19,52 @@ if (isset($_SESSION['zalogowany']) && $_SESSION['zalogowany'] === true) {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $wybrana_kategoria = $_POST['kategoria'] ?? '';
             $wybrane_sortowanie = $_POST['sortowanie'] ?? '';
+            
 
             if (!empty($wybrana_kategoria)) {
-                if ($wybrana_kategoria == "wszystko"){
-                    $sql = "SELECT nazwa, cena FROM produkty";
-                            
-                    $stmt3 = $pdo->prepare($sql);
-                    $stmt3->execute();
-                    $produkty = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
+                if (empty($wybrane_sortowanie)) {
+                    if ($wybrana_kategoria == "wszystko"){
+                        $sql = "SELECT nazwa, cena FROM produkty";
+                                
+                        $stmt3 = $pdo->prepare($sql);
+                        $stmt3->execute();
+                        $produkty = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+                    } else {
+                        $sql = "SELECT p.* 
+                                FROM produkty p
+                                INNER JOIN kategorie k ON p.kategoria_id = k.id
+                                WHERE k.nazwa = :wybrana_kategoria";
+                                
+                        $stmt3 = $pdo->prepare($sql);
+                        $stmt3->execute(['wybrana_kategoria' => $wybrana_kategoria]);
+                        $produkty = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+                    }
                 } else {
-                    $sql = "SELECT p.* 
-                            FROM produkty p
-                            INNER JOIN kategorie k ON p.kategoria_id = k.id
-                            WHERE k.nazwa = :wybrana_kategoria";
+                    if ($wybrana_kategoria == "wszystko"){
+                        if ($wybrane_sortowanie == "cena_r"){
+                            $sql = "SELECT nazwa, cena FROM produkty ORDER BY cena ASC";
+                        } else if ($wybrane_sortowanie == "cena_m") {
+                            $sql = "SELECT nazwa, cena FROM produkty ORDER BY cena DESC";
+                        } else if ($wybrane_sortowanie == "alfabetycznie_a"){
+                            $sql = "SELECT nazwa, cena FROM produkty ORDER BY nazwa ASC";
+                        } else if ($wybrane_sortowanie == "alfabetycznie_z"){
+                            $sql = "SELECT nazwa, cena FROM produkty ORDER BY nazwa DESC";
+                        }
                             
-                    $stmt3 = $pdo->prepare($sql);
-                    $stmt3->execute(['wybrana_kategoria' => $wybrana_kategoria]);
-                    $produkty = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+                            $stmt3 = $pdo->prepare($sql);
+                            $stmt3->execute();
+                            $produkty = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+                    } else {
+                            $sql = "SELECT p.* 
+                                    FROM produkty p
+                                    INNER JOIN kategorie k ON p.kategoria_id = k.id
+                                    WHERE k.nazwa = :wybrana_kategoria";
+                                    
+                            $stmt3 = $pdo->prepare($sql);
+                            $stmt3->execute(['wybrana_kategoria' => $wybrana_kategoria]);
+                            $produkty = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+                    }
                 }
 
             }
@@ -108,7 +137,7 @@ if (isset($_SESSION['zalogowany']) && $_SESSION['zalogowany'] === true) {
             
             <select name="sortowanie" id="sortowanie">
                 <option value="cena_r">Cena: Rosnąco 🢙</option>
-                <option value="cena_m">Cena: Rosnąco 🢛</option>
+                <option value="cena_m">Cena: Malejąco 🢛</option>
                 <option value="alfabetycznie_a">Alfabetycznie: (A do Z)</option>
                 <option value="alfabetycznie_z">Alfabetycznie: (Z do A)</option>
             </select>
